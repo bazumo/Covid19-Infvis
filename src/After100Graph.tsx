@@ -18,6 +18,7 @@ export const After100Graph: React.FC<{
   height: number;
   data?: TimeSeriesData[];
 }> = ({ width, height, data }) => {
+  const [selected, setSelected] = useState();
   if (!data) {
     return <div>Loading</div>;
   }
@@ -88,7 +89,14 @@ export const After100Graph: React.FC<{
         </p>
         <div>
           {filteredData.map((e, i) => (
-            <p style={{ color: additionalInfo[e.unit_name].color }}>
+            <p
+              style={{
+                color: additionalInfo[e.unit_name].color,
+                cursor: "pointer",
+                fontWeight: selected === e.unit_name ? "bold" : "normal"
+              }}
+              onClick={() => setSelected(e.unit_name)}
+            >
               {e.unit_name}
             </p>
           ))}
@@ -106,18 +114,21 @@ export const After100Graph: React.FC<{
                 <path
                   stroke={additionalInfo[d.unit_name].color}
                   fill="transparent"
+                  strokeWidth={selected === d.unit_name ? 2 : 1}
                   d={lineFunction(d.data)!}
+                  style={{ pointerEvents: "none" }}
                 />
                 {d.data.map(
                   ([_, y], j) =>
                     y > 0 && (
                       <circle
+                        style={{ cursor: "pointer" }}
+                        onClick={() => setSelected(d.unit_name)}
                         fill={additionalInfo[d.unit_name].color}
                         stroke="#fff"
                         cx={xScale(j)}
                         cy={yScale(y)}
                         r="2"
-                        onClick={() => alert(`${j}, ${d.unit_name}, ${y}`)}
                       ></circle>
                     )
                 )}
