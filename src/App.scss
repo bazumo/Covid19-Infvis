@@ -7,10 +7,15 @@ $font-family-sans-serif: "Roboto";
 
 .intro {
   background-color: black;
+  color: white;
+
   h1 {
     font-size: 6vw;
-    color: white;
     font-weight: bold;
+  }
+  h2 {
+    font-size: 2vw;
+    color: rgba(255, 255, 255, 0.9);
   }
 }
 
@@ -20,5 +25,15 @@ $font-family-sans-serif: "Roboto";
     background-color: white;
     padding: 20px;
     border-radius: 10px;
+  }
+}
+
+.intersection {
+  background-color: black;
+  color: white;
+  h3 {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 20px;
+    font-weight: normal;
   }
 }

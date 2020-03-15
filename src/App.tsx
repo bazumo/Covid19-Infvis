@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import logo from "./logo.svg";
 import "./App.scss";
-import { CustomGraph } from "./CustomGraph";
+import { After100Graph } from "./After100Graph";
 import { ParentSize } from "@vx/responsive";
 import { useWindowSize } from "./useWindowSize";
 import { MapGraph } from "./MapGraph";
@@ -49,13 +49,30 @@ function App() {
   return (
     <div>
       <section className="intro d-flex align-items-center align-content-center vh-100 vw-100 justify-content-center">
-        <h1>COVID-19 in Graphs</h1>
+        <div>
+          <h1>COVID-19 in Graphs</h1>
+          <h2>
+            How the world went from business as usual to pandemic emergency
+          </h2>
+        </div>
       </section>
-      <section className="graph-1">
-        <CustomGraph width={width} height={height} data={data}></CustomGraph>
-      </section>
+
       <section className="graph-2">
         <MapGraph width={width} height={height} data={data}></MapGraph>
+      </section>
+
+      <section className="d-flex align-items-center align-content-center vw-100 justify-content-center intersection">
+        <div style={{ margin: "150px 20px" }}>
+          <h2>Asia vs Europe</h2>
+          <h3>Some countries seem to contain the spread better than other</h3>
+        </div>
+      </section>
+      <section className="graph-1">
+        <After100Graph
+          width={width}
+          height={height}
+          data={data}
+        ></After100Graph>
       </section>
     </div>
   );

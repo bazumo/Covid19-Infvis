@@ -9,8 +9,9 @@ import { Text } from "@vx/text";
 import Slider from "@material-ui/core/Slider";
 console.log(topology);
 
-const bg = "#fecdce";
-const purple = "#201c4e";
+const bg = "#201c4e";
+const purple = "#fecdce";
+const selected_color = "#abab35";
 
 const geojson: GeoJSON.FeatureCollection<
   GeoJSON.Polygon | GeoJSON.MultiPolygon
@@ -123,7 +124,7 @@ export const MapGraph: React.FC<Props> = ({
               <path
                 key={`map-feature-${i}`}
                 d={geoGenerator(feature.geometry)!}
-                fill="#123"
+                fill={purple}
                 stroke={bg}
                 strokeWidth={0.5}
               />
@@ -136,7 +137,7 @@ export const MapGraph: React.FC<Props> = ({
                     cx={geoGenerator.centroid(p)![0]}
                     cy={geoGenerator.centroid(p)![1]}
                     r={p.properties.size}
-                    fill={hover === i ? "green" : "red"}
+                    fill={hover === i ? selected_color : "red"}
                     onPointerDown={event => {
                       setHover(i);
                     }}
@@ -146,7 +147,7 @@ export const MapGraph: React.FC<Props> = ({
           </g>
           <g transform={`translate(20, ${height - 50})`}>
             {hover !== undefined && (
-              <Text fontSize={24} fill={purple}>{`${[
+              <Text fontSize={24} fill={selected_color}>{`${[
                 processedData[hover].unit_name,
                 processedData[hover].sub_unit_name
               ]
