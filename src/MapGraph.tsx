@@ -9,9 +9,10 @@ import { Text } from "@vx/text";
 import Slider from "@material-ui/core/Slider";
 console.log(topology);
 
-const bg = "#201c4e";
-const purple = "#fecdce";
+const water_color = "#201c4e";
+const land_color = "#fecdce";
 const selected_color = "#abab35";
+const infected_color = "red";
 
 const geojson: GeoJSON.FeatureCollection<
   GeoJSON.Polygon | GeoJSON.MultiPolygon
@@ -31,36 +32,14 @@ export const MapGraph: React.FC<Props> = ({
   height: h,
   data = []
 }) => {
-  const width = 1000; //Math.min(1000, w);
-  const height = 500; //Math.min(500, h);
-  const scaleFactor = 630;
-  const centerX = width / 2;
-  const centerY = height / 2;
-  const scale = (width / scaleFactor) * 100;
+  const width = 1000;
+  const height = 500;
 
   const [hover, setHover] = useState<number>();
-
-  /*
-  const processedData = Object.values(
-    data.reduce(
-      (acc, row) => ({
-        ...acc,
-        [row.unit_name]: {
-          ...row,
-          data: row.data.map(
-            ([k, v], i) =>
-              [k, v + (acc[row.unit_name]?.data[i][1] ?? 0)] as [Date, number]
-          )
-        }
-      }),
-      {} as Record<string, TimeSeriesData>
-    )
-  );*/
 
   const processedData = data;
 
   const timeLength = processedData[0]?.data.length ?? 0;
-
   const [timeVal, setTimeVal] = useState(timeLength - 1);
 
   if (processedData.length == 0) {
@@ -113,19 +92,29 @@ export const MapGraph: React.FC<Props> = ({
   var geoGenerator = geoPath().projection(projection);
 
   return (
-    <div className="vw-100 vh-100 d-flex align-content-center justify-content-center align-items-center">
+    <div
+      className="vw-100 vh-100 d-flex align-content-center justify-content-center align-items-center"
+      style={{ backgroundColor: land_color }}
+    >
       <div>
         <h2>From local outbreak to pandemic</h2>
 
         <svg width={width} height={height} style={{ minWidth: 1000 }}>
-          <rect x={0} y={0} width={width} height={height} fill={bg} rx={14} />
+          <rect
+            x={0}
+            y={0}
+            width={width}
+            height={height}
+            fill={water_color}
+            rx={14}
+          />
           <g>
             {geojson.features.map((feature, i) => (
               <path
                 key={`map-feature-${i}`}
                 d={geoGenerator(feature.geometry)!}
-                fill={purple}
-                stroke={bg}
+                fill={land_color}
+                stroke={water_color}
                 strokeWidth={0.5}
               />
             ))}
@@ -137,7 +126,7 @@ export const MapGraph: React.FC<Props> = ({
                     cx={geoGenerator.centroid(p)![0]}
                     cy={geoGenerator.centroid(p)![1]}
                     r={p.properties.size}
-                    fill={hover === i ? selected_color : "red"}
+                    fill={hover === i ? selected_color : infected_color}
                     onPointerDown={event => {
                       setHover(i);
                     }}

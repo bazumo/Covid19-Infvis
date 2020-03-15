@@ -13,25 +13,27 @@ import {
 import React, { useEffect, useState } from "react";
 import { TimeSeriesData } from "./App";
 
-export const After100Graph: React.FC<{
+interface Props {
   width: number;
   height: number;
   data?: TimeSeriesData[];
-}> = ({ width, height, data }) => {
-  const [selected, setSelected] = useState();
+}
+
+const additionalInfo: Record<string, { color: string }> = {
+  Japan: {
+    color: schemeCategory10[0]
+  },
+  Singapore: { color: schemeCategory10[0] },
+  Italy: { color: schemeCategory10[1] },
+  Switzerland: { color: schemeCategory10[1] },
+  Germany: { color: schemeCategory10[1] }
+};
+
+export const After100Graph: React.FC<Props> = ({ width, height, data }) => {
+  const [selected, setSelected] = useState<string>();
   if (!data) {
     return <div>Loading</div>;
   }
-
-  const additionalInfo: Record<string, { color: string }> = {
-    Japan: {
-      color: schemeCategory10[0]
-    },
-    Singapore: { color: schemeCategory10[0] },
-    Italy: { color: schemeCategory10[1] },
-    Switzerland: { color: schemeCategory10[1] },
-    Germany: { color: schemeCategory10[1] }
-  };
 
   const filteredData = data
     .filter(e => Object.keys(additionalInfo).includes(e.unit_name))
@@ -43,11 +45,6 @@ export const After100Graph: React.FC<{
   let CONTAINER_HEIGHT = Math.min(height, 300);
   let MARGIN_AXIS_BOTTOM = 20;
   let MARGIN_AXIS_LEFT = 50;
-
-  if (width < 800) {
-  }
-
-  console.log(filteredData);
 
   const HEIGHT = CONTAINER_HEIGHT - MARGIN_AXIS_BOTTOM;
   const WIDTH = CONTAINER_WIDTH - MARGIN_AXIS_LEFT;
@@ -76,8 +73,6 @@ export const After100Graph: React.FC<{
     .y((d: any) => {
       return yScale(d[1]);
     });
-
-  const colors = quantize(interpolateSinebow, filteredData.length);
 
   return (
     <div className="d-flex align-items-center align-content-center vh-100 vw-100 justify-content-around flex-wrap">
