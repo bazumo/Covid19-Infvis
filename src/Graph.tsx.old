@@ -1,0 +1,83 @@
+import React, { useEffect, useState, useRef } from "react";
+import { useWindowSize } from "./useWindowSize";
+import {
+  csv,
+  DSVRowArray,
+  create,
+  scaleBand,
+  scaleLinear,
+  max,
+  axisLeft,
+  axisBottom,
+  select,
+  scaleLog
+} from "d3";
+
+// First try using d3 with react, fail
+
+const dataset_url = `${process.env.PUBLIC_URL}/data/time_series_covid_19_confirmed.csv`;
+
+export const Graph: React.FC<{}> = () => {
+  const [data, setData] = useState<DSVRowArray<string>>();
+  useEffect(() => {
+    csv(dataset_url).then(res => {
+      setData(res);
+    });
+  }, []);
+
+  const container = useRef<HTMLDivElement>(null);
+
+  if (!data) {
+    return <div>Loading</div>;
+  }
+
+  return (
+    <div
+      ref={el => {
+        const height = 500;
+        const width = 800;
+        const svg = select(el)
+          .append("svg")
+          .attr("width", width)
+          .attr("height", height);
+        const margin = { top: 20, right: 0, bottom: 30, left: 40 };
+
+        const x = scaleBand()
+          .domain(data.map(d => d["Country/Region"]!))
+          .range([margin.left, width - margin.right])
+          .padding(0.1);
+
+        const y = scaleLog()
+          .domain([0, max(data, d => parseInt(d["2/20/20"]!))!])
+          .range([height - margin.bottom, margin.top]);
+
+        const xAxis = (g: any) =>
+          g
+            .attr("transform", `translate(0,${height - margin.bottom})`)
+            .call(axisBottom(x).tickSizeOuter(0));
+
+        const yAxis = (g: any) =>
+          g
+            .attr("transform", `translate(${margin.left},0)`)
+            .call(axisLeft(y))
+            .call((g: any) => g.select(".domain").remove());
+
+        const bar = svg
+          .append("g")
+          .attr("fill", "steelblue")
+          .selectAll("rect")
+          .data(data ? data : [])
+          .join("rect")
+          .style("mix-blend-mode", "multiply")
+          .attr("x", (d: any) => x(d["Country/Region"]!)!)
+          .attr("y", (d: any) => y(d["2/20/20"]!))
+          .attr("height", (d: any) => y(0) - y(d["2/20/20"]!))
+          .attr("width", x.bandwidth());
+
+        const gx = svg.append("g").call(xAxis);
+
+        const gy = svg.append("g").call(yAxis);
+      }}
+    ></div>
+  );
+};

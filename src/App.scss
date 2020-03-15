@@ -1,0 +1,24 @@
+$font-family-sans-serif: "Roboto";
+@import "bootstrap/scss/bootstrap.scss";
+
+.fh {
+  height: 100vh;
+}
+
+.intro {
+  background-color: black;
+  h1 {
+    font-size: 6vw;
+    color: white;
+    font-weight: bold;
+  }
+}
+
+.graph-1 {
+  background-color: rgb(255, 255, 255);
+  .graph-container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+  }
+}
