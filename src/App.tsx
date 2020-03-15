@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import logo from "./logo.svg";
 import "./App.scss";
-import { Graph } from "./Graph";
 import { CustomGraph } from "./CustomGraph";
 import { ParentSize } from "@vx/responsive";
 import { useWindowSize } from "./useWindowSize";
