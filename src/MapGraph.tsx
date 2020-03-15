@@ -72,7 +72,7 @@ export const MapGraph: React.FC<Props> = ({
   const minVal = 0;
 
   const scaleRadius = scaleSqrt()
-    .range([0, 20])
+    .range([1, 20])
     .domain([minVal, maxVal]);
 
   var timeScale = scaleTime()
@@ -92,7 +92,7 @@ export const MapGraph: React.FC<Props> = ({
 
   const points: GeoJSON.Feature<
     GeoJSON.Point,
-    { name: string; size: number }
+    { name: string; size: number; cases: number }
   >[] = processedData.map(row => {
     return {
       type: "Feature",
@@ -102,7 +102,8 @@ export const MapGraph: React.FC<Props> = ({
       },
       properties: {
         name: [row.unit_name, row.sub_unit_name].filter(s => !!s).join(", "),
-        size: scaleRadius(row.data[timeVal]?.[1])
+        size: scaleRadius(row.data[timeVal]?.[1]),
+        cases: row.data[timeVal]?.[1]
       }
     };
   });
@@ -127,20 +128,21 @@ export const MapGraph: React.FC<Props> = ({
                 strokeWidth={0.5}
               />
             ))}
-            {points.map((p, i) => (
-              <circle
-                key={p.properties.name}
-                cx={geoGenerator.centroid(p)![0]}
-                cy={geoGenerator.centroid(p)![1]}
-                r={p.properties.size}
-                stroke="red"
-                strokeWidth="3"
-                fill="red"
-                onPointerEnter={event => {
-                  setHover(i);
-                }}
-              />
-            ))}
+            {points.map(
+              (p, i) =>
+                p.properties.cases > 0 && (
+                  <circle
+                    key={p.properties.name}
+                    cx={geoGenerator.centroid(p)![0]}
+                    cy={geoGenerator.centroid(p)![1]}
+                    r={p.properties.size}
+                    fill={hover === i ? "green" : "red"}
+                    onPointerDown={event => {
+                      setHover(i);
+                    }}
+                  />
+                )
+            )}
           </g>
           <g transform={`translate(20, ${height - 50})`}>
             {hover !== undefined && (
