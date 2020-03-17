@@ -19,16 +19,25 @@ interface Props {
   data?: TimeSeriesData[];
 }
 
+const continents = {
+  asia: {
+    color: schemeCategory10[0]
+  },
+  europe: {
+    color: schemeCategory10[1]
+  }
+};
+
 const additionalInfo: Record<string, { color: string }> = {
   Japan: {
     color: schemeCategory10[0]
   },
-  "Korea, South": { color: schemeCategory10[0] },
+  "Korea, South": { ...continents.asia },
 
-  Singapore: { color: schemeCategory10[0] },
-  Italy: { color: schemeCategory10[1] },
-  Switzerland: { color: schemeCategory10[1] },
-  Germany: { color: schemeCategory10[1] }
+  Singapore: { ...continents.asia },
+  Italy: { ...continents.europe },
+  Switzerland: { ...continents.europe },
+  Germany: { ...continents.europe }
 };
 
 export const After100Graph: React.FC<Props> = ({ width, height, data }) => {
@@ -43,13 +52,14 @@ export const After100Graph: React.FC<Props> = ({ width, height, data }) => {
 
   // Filter out data
 
-  let CONTAINER_WIDTH = Math.min(width, 500);
+  let CONTAINER_WIDTH = Math.min(width, 600);
   let CONTAINER_HEIGHT = Math.min(height, 300);
-  let MARGIN_AXIS_BOTTOM = 20;
-  let MARGIN_AXIS_LEFT = 50;
+  let MARGIN_AXIS_BOTTOM = 50;
+  let MARGIN_AXIS_LEFT = 90;
+  let MARGIN_AXIS_RIGHT = 90;
 
   const HEIGHT = CONTAINER_HEIGHT - MARGIN_AXIS_BOTTOM;
-  const WIDTH = CONTAINER_WIDTH - MARGIN_AXIS_LEFT;
+  const WIDTH = CONTAINER_WIDTH - MARGIN_AXIS_LEFT - MARGIN_AXIS_RIGHT;
 
   const oneThirdIncreaseData = filteredData
     .reduce(
@@ -96,8 +106,10 @@ export const After100Graph: React.FC<Props> = ({ width, height, data }) => {
       <div style={{ maxWidth: 300 }}>
         <h2>Development after 100ths case</h2>
         <p>
-          Development of case numbers after the 100th case in selected Asian and
-          European countries
+          Development of case numbers after the 100th case in selected{" "}
+          <span style={{ color: continents.asia.color }}>Asian</span> and{" "}
+          <span style={{ color: continents.europe.color }}>European</span>{" "}
+          countries
         </p>
         <div>
           {filteredData.map((e, i) => (
@@ -157,15 +169,28 @@ export const After100Graph: React.FC<Props> = ({ width, height, data }) => {
               d={lineFunction(oneThirdIncreaseData)!}
               style={{ pointerEvents: "none" }}
             />
-            <text transform={`translate(300,-175)`} fontSize="10px" fill="#CCC">
+            <text x={340} dy="-0.5em" fontSize="10px" fill="#CCC">
               <textPath xlinkHref="#oneThirdIncreaseLine">
                 33% daily increase
               </textPath>
             </text>
           </g>
 
+          <text
+            transform="rotate(-90)"
+            y={0}
+            x={-HEIGHT / 2}
+            dy="-3em"
+            style={{ textAnchor: "middle" }}
+          >
+            Cases
+          </text>
+
           <g transform={`translate(0, ${HEIGHT})`}>
             <line x2={WIDTH} stroke="black"></line>
+            <text y={0} x={WIDTH / 2} dy="2em" style={{ textAnchor: "middle" }}>
+              Days since 100 cases
+            </text>
 
             {xTicks.map(v => (
               <g
