@@ -165,7 +165,7 @@ export const MapGraph: React.FC<Props> = ({
           </g>
 
           <g
-            transform={`translate(${width - 90}, ${height - 30})`}
+            transform={`translate(${width - 90}, ${height - 40})`}
             style={{ fontSize: "20px" }}
           >
             <rect
@@ -201,6 +201,9 @@ export const MapGraph: React.FC<Props> = ({
                 </text>
               </>
             ))}
+            <text fontSize={10} fill="#ccc" y={35} x="-2em">
+              Total Cases in region
+            </text>
           </g>
         </svg>
         <Slider
