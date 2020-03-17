@@ -62,7 +62,10 @@ function App() {
       </section>
 
       <section className="d-flex align-items-center align-content-center vw-100 justify-content-center intersection">
-        <div style={{ margin: "150px 20px" }}>
+        <div
+          className="container"
+          style={{ marginTop: "150px", marginBottom: "150px" }}
+        >
           <h2>Asia vs Europe</h2>
           <h3>Some countries seem to contain the spread better than other</h3>
         </div>

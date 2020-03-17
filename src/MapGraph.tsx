@@ -10,7 +10,7 @@ import Slider from "@material-ui/core/Slider";
 import { PatternWaves } from "@vx/pattern";
 
 const water_color = "#2a2c45";
-const land_color = "#fecdce";
+const land_color = "#ccc";
 const selected_color = "#abab35";
 const infected_color = "red";
 
@@ -61,6 +61,10 @@ export const MapGraph: React.FC<Props> = ({
       processedData[0].data[processedData[0].data.length - 1][0]
     ])
     .range([0, processedData[0].data.length]);
+
+  const firstDate = processedData[0].data[0][0];
+  const lastDate = processedData[0].data[processedData[0].data.length - 1][0];
+  const longFormat = timeFormat("%e. %b");
 
   var formatFunction = timeFormat("%e/%-m");
 
@@ -159,6 +163,31 @@ export const MapGraph: React.FC<Props> = ({
                 .join(", ")}: ${processedData[hover].data[timeVal][1]}`}</Text>
             )}
           </g>
+          <g transform="translate(50,30)" style={{ fontSize: "20px" }}>
+            <rect
+              className="legend-box"
+              x="-18"
+              y="-28.5"
+              height="150"
+              fill="white"
+              width="175.84375"
+            ></rect>
+            <g className="legend-items">
+              {[1, 1000, 10000].map((v, i) => (
+                <>
+                  <text y={`${i * 2}em`} x="2.5em">
+                    {v}
+                  </text>
+                  <circle
+                    cy={`${i * 2 - 0.4}em`}
+                    cx={20}
+                    r={scaleRadius(v)}
+                    fill={infected_color}
+                  ></circle>
+                </>
+              ))}
+            </g>
+          </g>
         </svg>
         <Slider
           step={null}
@@ -172,6 +201,9 @@ export const MapGraph: React.FC<Props> = ({
           onChange={(e, i) => setTimeVal(i as number)}
           valueLabelDisplay="on"
         />
+        <div className="small" style={{ marginTop: -15, color: "#ccc" }}>
+          Timeline from {longFormat(firstDate)} to {longFormat(lastDate)}
+        </div>
       </div>
     </div>
   );
