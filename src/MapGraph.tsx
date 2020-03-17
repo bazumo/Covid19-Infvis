@@ -4,12 +4,12 @@ import { geoNaturalEarth1 } from "d3-geo";
 
 import topology from "world-atlas/countries-50m.json";
 import { TimeSeriesData } from "./App";
-import { geoPath, scaleSqrt, max, scaleTime, timeFormat } from "d3";
+import { geoPath, scaleSqrt, max, scaleTime, timeFormat, rgb } from "d3";
 import { Text } from "@vx/text";
 import Slider from "@material-ui/core/Slider";
-console.log(topology);
+import { PatternWaves } from "@vx/pattern";
 
-const water_color = "#201c4e";
+const water_color = "#2a2c45";
 const land_color = "#fecdce";
 const selected_color = "#abab35";
 const infected_color = "red";
@@ -92,20 +92,35 @@ export const MapGraph: React.FC<Props> = ({
   var geoGenerator = geoPath().projection(projection);
 
   return (
-    <div
-      className="vw-100 vh-100 d-flex align-content-center justify-content-center align-items-center"
-      style={{ backgroundColor: land_color }}
-    >
+    <div className="vw-100 vh-100 d-flex align-content-center justify-content-center align-items-center">
       <div>
         <h2>From local outbreak to pandemic</h2>
 
         <svg width={width} height={height} style={{ minWidth: 1000 }}>
+          <PatternWaves
+            id="Waves"
+            height={10}
+            width={10}
+            stroke={rgb(water_color)
+              .brighter(1)
+              .hex()}
+            strokeWidth={1}
+          />
+
           <rect
             x={0}
             y={0}
             width={width}
             height={height}
             fill={water_color}
+            rx={14}
+          />
+          <rect
+            x={0}
+            y={0}
+            width={width}
+            height={height}
+            fill="url(#Waves)"
             rx={14}
           />
           <g>

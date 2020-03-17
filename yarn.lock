@@ -1834,6 +1834,16 @@
     classnames "^2.2.5"
     prop-types "^15.6.2"
 
+"@vx/pattern@^0.0.195":
+  version "0.0.195"
+  resolved "https://registry.yarnpkg.com/@vx/pattern/-/pattern-0.0.195.tgz#a702bf191e0187992cd29e8b40e6735886e4afec"
+  integrity sha512-YVKfkJuqRxbxCNuVksdxfdjuxbGUBXwPzpytVjaia+wHDHGb/KNlbbP6TVFRSvtf8XtrsWEZxY+QntqtIm5UAw==
+  dependencies:
+    "@types/classnames" "^2.2.9"
+    "@types/react" "*"
+    classnames "^2.2.5"
+    prop-types "^15.5.10"
+
 "@vx/responsive@^0.0.195":
   version "0.0.195"
   resolved "https://registry.yarnpkg.com/@vx/responsive/-/responsive-0.0.195.tgz#8c75d86a28801c5f1970d43433a01e101454d444"
