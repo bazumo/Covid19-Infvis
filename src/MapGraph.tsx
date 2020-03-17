@@ -163,30 +163,44 @@ export const MapGraph: React.FC<Props> = ({
                 .join(", ")}: ${processedData[hover].data[timeVal][1]}`}</Text>
             )}
           </g>
-          <g transform="translate(50,30)" style={{ fontSize: "20px" }}>
+
+          <g
+            transform={`translate(${width - 90}, ${height - 30})`}
+            style={{ fontSize: "20px" }}
+          >
             <rect
               className="legend-box"
-              x="-18"
-              y="-28.5"
-              height="150"
-              fill="white"
-              width="175.84375"
+              x="0"
+              y="0"
+              rx={14}
+              height="76"
+              fill="transparent"
+              width="76"
             ></rect>
-            <g className="legend-items">
-              {[1, 1000, 10000].map((v, i) => (
-                <>
-                  <text y={`${i * 2}em`} x="2.5em">
-                    {v}
-                  </text>
-                  <circle
-                    cy={`${i * 2 - 0.4}em`}
-                    cx={20}
-                    r={scaleRadius(v)}
-                    fill={infected_color}
-                  ></circle>
-                </>
-              ))}
-            </g>
+
+            {[1, 10000, 40000, 100000].map((v, i) => (
+              <>
+                <circle
+                  cy={20 - scaleRadius(v)}
+                  cx={20}
+                  r={scaleRadius(v)}
+                  stroke={infected_color}
+                  fill="transparent"
+                ></circle>
+              </>
+            ))}
+            {[1, 10000, 40000, 100000].map((v, i) => (
+              <>
+                <text
+                  fontSize={10}
+                  fill="#ccc"
+                  y={20 - scaleRadius(v) * 2}
+                  x="2.5em"
+                >
+                  {v}
+                </text>
+              </>
+            ))}
           </g>
         </svg>
         <Slider
