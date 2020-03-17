@@ -23,6 +23,8 @@ const additionalInfo: Record<string, { color: string }> = {
   Japan: {
     color: schemeCategory10[0]
   },
+  "Korea, South": { color: schemeCategory10[0] },
+
   Singapore: { color: schemeCategory10[0] },
   Italy: { color: schemeCategory10[1] },
   Switzerland: { color: schemeCategory10[1] },
@@ -49,6 +51,21 @@ export const After100Graph: React.FC<Props> = ({ width, height, data }) => {
   const HEIGHT = CONTAINER_HEIGHT - MARGIN_AXIS_BOTTOM;
   const WIDTH = CONTAINER_WIDTH - MARGIN_AXIS_LEFT;
 
+  const oneThirdIncreaseData = filteredData
+    .reduce(
+      (a, d) => (a.length < d.data.length ? d.data : a),
+      [] as [Date, number][]
+    )
+    .slice();
+
+  for (let i = 1; i < oneThirdIncreaseData.length; i++) {
+    oneThirdIncreaseData[i] = [
+      oneThirdIncreaseData[i][0],
+      oneThirdIncreaseData[i - 1][1] * 1.3333333333333333333333333
+    ];
+  }
+
+  console.log(oneThirdIncreaseData);
   const maxVal = max(
     filteredData.map(row => max(row.data.map(row => row[1]))!)
   )!;
@@ -129,6 +146,22 @@ export const After100Graph: React.FC<Props> = ({ width, height, data }) => {
                 )}
               </g>
             ))}
+          </g>
+
+          <g>
+            <path
+              id="oneThirdIncreaseLine"
+              stroke="#CCC"
+              fill="transparent"
+              strokeWidth={1}
+              d={lineFunction(oneThirdIncreaseData)!}
+              style={{ pointerEvents: "none" }}
+            />
+            <text transform={`translate(300,-175)`} fontSize="10px" fill="#CCC">
+              <textPath xlinkHref="#oneThirdIncreaseLine">
+                33% daily increase
+              </textPath>
+            </text>
           </g>
 
           <g transform={`translate(0, ${HEIGHT})`}>
