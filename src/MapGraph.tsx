@@ -4,7 +4,15 @@ import { geoNaturalEarth1 } from "d3-geo";
 
 import topology from "world-atlas/countries-50m.json";
 import { TimeSeriesData } from "./App";
-import { geoPath, scaleSqrt, max, scaleTime, timeFormat, rgb } from "d3";
+import {
+  geoPath,
+  scaleSqrt,
+  max,
+  scaleTime,
+  timeFormat,
+  rgb,
+  scaleSymlog,
+} from "d3";
 import { Text } from "@vx/text";
 import Slider from "@material-ui/core/Slider";
 import { PatternWaves } from "@vx/pattern";
@@ -30,7 +38,7 @@ interface Props {
 export const MapGraph: React.FC<Props> = ({
   width: w,
   height: h,
-  data = []
+  data = [],
 }) => {
   const width = 1000;
   const height = 500;
@@ -47,18 +55,16 @@ export const MapGraph: React.FC<Props> = ({
   }
 
   const maxVal = max(
-    processedData.map(row => max(row.data.map(row => row[1]))!)
+    processedData.map((row) => max(row.data.map((row) => row[1]))!)
   )!;
   const minVal = 0;
 
-  const scaleRadius = scaleSqrt()
-    .range([1, 20])
-    .domain([minVal, maxVal]);
+  const scaleRadius = scaleSqrt().range([1, 30]).domain([minVal, maxVal]);
 
   var timeScale = scaleTime()
     .domain([
       processedData[0].data[0][0],
-      processedData[0].data[processedData[0].data.length - 1][0]
+      processedData[0].data[processedData[0].data.length - 1][0],
     ])
     .range([0, processedData[0].data.length]);
 
@@ -69,7 +75,7 @@ export const MapGraph: React.FC<Props> = ({
   var formatFunction = timeFormat("%e/%-m");
 
   const marks = processedData[0].data.map(([k, v], i) => ({
-    value: i
+    value: i,
   }));
 
   console.log("pd", processedData);
@@ -77,18 +83,18 @@ export const MapGraph: React.FC<Props> = ({
   const points: GeoJSON.Feature<
     GeoJSON.Point,
     { name: string; size: number; cases: number }
-  >[] = processedData.map(row => {
+  >[] = processedData.map((row) => {
     return {
       type: "Feature",
       geometry: {
         type: "Point",
-        coordinates: [row.long, row.lat]
+        coordinates: [row.long, row.lat],
       },
       properties: {
-        name: [row.unit_name, row.sub_unit_name].filter(s => !!s).join(", "),
+        name: [row.unit_name, row.sub_unit_name].filter((s) => !!s).join(", "),
         size: scaleRadius(row.data[timeVal]?.[1]),
-        cases: row.data[timeVal]?.[1]
-      }
+        cases: row.data[timeVal]?.[1],
+      },
     };
   });
 
@@ -105,9 +111,7 @@ export const MapGraph: React.FC<Props> = ({
             id="Waves"
             height={10}
             width={10}
-            stroke={rgb(water_color)
-              .brighter(1)
-              .hex()}
+            stroke={rgb(water_color).brighter(1).hex()}
             strokeWidth={1}
           />
 
@@ -146,7 +150,7 @@ export const MapGraph: React.FC<Props> = ({
                     cy={geoGenerator.centroid(p)![1]}
                     r={p.properties.size}
                     fill={hover === i ? selected_color : infected_color}
-                    onPointerDown={event => {
+                    onPointerDown={(event) => {
                       setHover(i);
                     }}
                   />
@@ -157,9 +161,9 @@ export const MapGraph: React.FC<Props> = ({
             {hover !== undefined && (
               <Text fontSize={24} fill={selected_color}>{`${[
                 processedData[hover].unit_name,
-                processedData[hover].sub_unit_name
+                processedData[hover].sub_unit_name,
               ]
-                .filter(s => !!s)
+                .filter((s) => !!s)
                 .join(", ")}: ${processedData[hover].data[timeVal][1]}`}</Text>
             )}
           </g>
@@ -178,7 +182,7 @@ export const MapGraph: React.FC<Props> = ({
               width="76"
             ></rect>
 
-            {[1, 10000, 40000, 100000].map((v, i) => (
+            {[1, 50000, 200000, 500000, 1000000].map((v, i) => (
               <>
                 <circle
                   cy={20 - scaleRadius(v)}
@@ -189,7 +193,7 @@ export const MapGraph: React.FC<Props> = ({
                 ></circle>
               </>
             ))}
-            {[1, 10000, 40000, 100000].map((v, i) => (
+            {[1, 50000, 200000, 500000, 1000000].map((v, i) => (
               <>
                 <text
                   fontSize={10}
@@ -208,7 +212,7 @@ export const MapGraph: React.FC<Props> = ({
         </svg>
         <Slider
           step={null}
-          valueLabelFormat={i => {
+          valueLabelFormat={(i) => {
             console.log(i, formatFunction(processedData[0].data[i][0]));
             return formatFunction(processedData[0].data[i][0]);
           }}

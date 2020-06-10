@@ -15,7 +15,7 @@ export interface TimeSeriesData {
   data: [Date, number][];
 }
 
-const dataset_url = `https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv`;
+const dataset_url = `https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv`;
 
 function App() {
   const { width, height } = useWindowSize();
@@ -23,9 +23,9 @@ function App() {
   const [data, setData] = useState<TimeSeriesData[]>();
 
   useEffect(() => {
-    csv(dataset_url).then(res => {
+    csv(dataset_url).then((res) => {
       console.log("RES", res);
-      const d: TimeSeriesData[] = res.map(row => ({
+      const d: TimeSeriesData[] = res.map((row) => ({
         unit_name: row["Country/Region"]!,
         sub_unit_name: row["Province/State"]!,
         lat: parseFloat(row["Lat"]!),
@@ -34,10 +34,10 @@ function App() {
           .filter(([k, _]) => parseInt(k) > 0)
           .map(([k, v]) => {
             // date is MM/DD/YY
-            const parts = k.split("/").map(s => parseInt(s));
+            const parts = k.split("/").map((s) => parseInt(s));
             const date = new Date(2000 + parts[2], parts[0] - 1, parts[1]);
             return [date, parseInt(v!)];
-          })
+          }),
       }));
       setData(d);
     });
